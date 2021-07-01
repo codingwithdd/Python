@@ -1,0 +1,177 @@
+# This program is to add or view records of food or exercise
+
+
+
+#ask exercise or food
+def question1():
+    """this ask question whether you want to choose exercise or food"""
+    print("which you want to open -- 'EXERCISE' OR FOOD\n")
+    a=input()
+    b=a.upper()
+    return b
+
+#ask view or add
+def question2():
+    """this ask whether you want to view or add record"""
+    print("what you want to view or add\n")
+    question22=input()
+    que=question22.upper()
+    return que
+
+#this is to view exercise
+def view1(v):
+    if v==1:
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\dipesh.txt","rt") as z:
+            xx=z.read()
+            print(xx)
+            z.close()
+    elif v==2:
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\diwas.txt","rt") as z:
+            xx=z.read()
+            print(xx)
+            z.close()
+    elif v==3:
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\deepika.txt","rt") as z:
+            xx=z.read()
+            print(xx)
+            z.close()                
+
+#this is to view food
+def view2(v):
+    if v==1:
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\dipesh1.txt","rt") as z:
+            xx=z.read()
+            print(xx)
+            z.close()
+    elif v==2:
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\diwas1.txt","rt") as z:
+            xx=z.read()
+            print(xx)
+            z.close()
+    elif v==3:
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\deepika1.txt","rt") as z:
+            xx=z.read()
+            print(xx)
+            z.close()
+
+# this is to add exercise
+def edit1(e):
+    if e==1:
+        y=input("enter what you want to add\n")
+        yy=str(getdate())
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\dipesh.txt","a") as z:
+            z.write(yy)
+            z.write(y)
+            z.close()
+    elif e==2:
+        y=input("enter what you want to add\n")
+        yy=str(getdate())
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\diwas.txt","a") as z:
+            z.write(yy)
+            z.write(y)
+            z.close()
+    elif e==3:
+        y=input("enter what you want to add\n")
+        yy=str(getdate())
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\deepika.txt","a") as z:
+            z.write(yy)
+            z.write(y)
+            z.close()
+
+# this is to add food
+def edit2(e):
+    if e==1:
+        y=input("enter what you want to add\n")
+        yy=str(getdate())
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\dipesh1.txt","a") as z:
+            z.write(yy)
+            z.write(y)
+            z.close()
+    elif e==2:
+        y=input("enter what you want to add\n")
+        yy=str(getdate())
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\diwas1.txt","a") as z:
+            z.write(yy)
+            z.write(y)
+            z.close()
+    elif e==3:
+        y=input("enter what you want to add\n")
+        yy=str(getdate())
+        with open("C:\\Users\Sunil Aryal\Desktop\diwaas\deepika1.txt","a") as z:
+            z.write(yy)
+            z.write(y)
+            z.close()
+
+def getdate():
+    import datetime
+    return datetime.datetime.now()
+
+#main 
+while(True):
+    print("Welcome to dd health record program\n")
+    person=input("who are you -Dipesh -Diwas - Deepika\n")
+    persons=person.upper()
+    #print(persons)
+
+
+    if persons=="DIPESH":
+        k=question1()
+        if k=="FOOD":
+            kk=question2()
+            if kk=="VIEW":
+                view2(1)
+            elif kk=="ADD":
+                edit2(1)
+        elif k=="EXERCISE":
+            kk=question2()
+            if kk=="VIEW":
+                view1(1)
+            elif kk=="ADD":
+                edit1(1)
+                  
+
+    elif persons=="DIWAS":
+        k=question1()
+        if k=="FOOD":
+            kk=question2()
+            if kk=="VIEW":
+                view2(2)
+            elif kk=="ADD":
+                edit2(2)
+        elif k=="EXERCISE":
+            kk=question2()
+            if kk=="VIEW":
+                view1(2)
+            elif kk=="ADD":
+                edit1(2)
+        
+
+    elif persons=="DEEPIKA":
+        k=question1()
+        if k=="FOOD":
+            kk=question2()
+            if kk=="VIEW":
+                view2(3)
+            elif kk=="ADD":
+                edit2(3)
+        elif k=="EXERCISE":
+            kk=question2()
+            if kk=="VIEW":
+                view1(3)
+            elif kk=="ADD":
+                edit1(3)
+
+    else:
+        print("sth error")   
+    ip=input("Do you want to continue y/n")
+    ipp=ip.lower()
+    if ipp=="y":
+        continue
+    else:
+        break
+
+
+
+
+
+
