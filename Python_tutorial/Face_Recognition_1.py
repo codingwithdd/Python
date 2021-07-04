@@ -21,10 +21,10 @@ while True:
     face_coordinates = trained_face_data.detectMultiScale(grayscaled_img)
 
     # find the coordinate of rectangle along with height and width
-    (x,y,w,h)=face_coordinates[0]
+    for (x,y,w,h) in face_coordinates:
 
-    # Draw rectangle around the faces
-    cv2.rectangle(frame,(x,y),(x+w,y+h),(randrange(156,256),randrange(256),randrange(256)),2)
+        # Draw rectangle around the faces
+        cv2.rectangle(frame,(x,y),(x+w,y+h),(randrange(156,256),randrange(256),randrange(256)),2)
 
     #Display the image with the faces
     cv2.imshow("Dipesh",frame)
