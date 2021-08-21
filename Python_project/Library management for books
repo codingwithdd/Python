@@ -1,0 +1,307 @@
+from os import execv
+from tkinter import *
+from tkinter import ttk
+from typing import ItemsView
+import mysql.connector
+from tkinter import messagebox
+import datetime
+#from tkinter.ttk import *
+
+
+class Library_ManagementSystem():
+    def __init__(self,root):
+        self.root=root
+        self.root.title("Library Book Management System")
+        self.root.geometry("1500x800+0+0")
+
+
+        # ======================== Variable =========================
+
+        self.editor_var=StringVar()
+        self.bookid_var=StringVar()
+        self.bookname_var=StringVar()
+        self.auther_var=StringVar()
+        self.finalprice_var=StringVar()
+
+
+
+        lbltitle=Label(self.root,text="LIBRARY BOOKS MANAGEMENT SYSTEM",bg="ivory2",fg="green",bd=6,relief=RIDGE,font=("Open Sans",25,"bold"),padx=2,pady=6)
+        lbltitle.pack(side=TOP,fill=X)
+
+
+        frame=Frame(self.root,bd=6,relief=RIDGE,padx=20,bg="powder blue")
+        frame.place(x=0,y=130,width=1530,height=400)
+        
+        # ============================ Data Frame Left ===================
+
+        DataFrameLeft=LabelFrame(frame,text="Fill Details",bg="ivory2",fg="green",bd=6,relief=RIDGE,font=("Open Sans",12,"bold"))
+        DataFrameLeft.place(x=0,y=5,width=900,height=350)
+
+        
+        lblPostCode=Label(DataFrameLeft,text="Your Name",font=("Open Sans",15),padx=2,pady=6)
+        lblPostCode.grid(row=0,column=0,sticky=W)
+        lblPostCode=Entry(DataFrameLeft,font=("Open Sans",15),textvariable=self.editor_var,width=29)
+        lblPostCode.grid(row=0,column=1)
+
+        lblMobile=Label(DataFrameLeft,text="Book Id",font=("Open Sans",15),padx=2,pady=6)
+        lblMobile.grid(row=1,column=0,sticky=W)
+        lblMobile=Entry(DataFrameLeft,font=("Open Sans",15),textvariable=self.bookid_var,width=29)
+        lblMobile.grid(row=1,column=1)
+
+        lblBookId=Label(DataFrameLeft,text="Book Name",font=("Open Sans",15),padx=2,pady=6)
+        lblBookId.grid(row=2,column=0,sticky=W)
+        lblBookId=Entry(DataFrameLeft,font=("Open Sans",15),textvariable=self.bookname_var,width=29)
+        lblBookId.grid(row=2,column=1)
+
+        lblAutherName=Label(DataFrameLeft,text="Auther Name",font=("Open Sans",15),padx=2,pady=6)
+        lblAutherName.grid(row=3,column=0,sticky=W)
+        lblAutherName=Entry(DataFrameLeft,font=("Open Sans",15),textvariable=self.auther_var,width=29)
+        lblAutherName.grid(row=3,column=1)
+
+        lblActualPrice=Label(DataFrameLeft,text="Actual price",font=("Open Sans",15),padx=2,pady=6)
+        lblActualPrice.grid(row=5,column=0,sticky=W)
+        lblActualPrice=Entry(DataFrameLeft,font=("Open Sans",15),textvariable=self.finalprice_var,width=29)
+        lblActualPrice.grid(row=5,column=1)
+
+        
+        # ======================= Data Frame Right ===========================
+        
+
+
+        DataFrameRight=LabelFrame(frame,text="Book Details",bg="ivory2",fg="green",bd=6,relief=RIDGE,font=("Open Sans",12,"bold"))
+        DataFrameRight.place(x=910,y=5,width=540,height=350)
+
+        self.txtBox=Text(DataFrameRight,font=("Open Sans",12),width=55,height=16,padx=2,pady=6)
+        self.txtBox.grid(row=0,column=0)
+        
+        # listScrollbar=Scrollbar(DataFrameRight)
+        # listScrollbar.grid(row=0,column=1,sticky="ns")
+        
+        #listBooks=["the one","king","best","London","Nepal one only","life is misserable","one","best","Dipesh","Diwas","Pandit","one journey to Nepal","USA","los angels","a day in kathmandu","mechine","Advance life in robotics","Python lamguage"]
+        
+        # listBox=Listbox(DataFrameRight,font=("Open Sans",12),width=56,height=16)
+        # listBox.bind("<<ListboxSelect>>",selectBooks)
+        # listBox.grid(row=0,column=0,padx=6)
+        # listScrollbar.config(command=listBox.yview)
+
+        # for item in listBooks:
+        #     listBox.insert(END,item)
+            
+
+        # ================================  Buttom Frame =========================
+
+        FrameButtom=Frame(self.root,bd=6,relief=RIDGE,padx=20,bg="powder blue")
+        FrameButtom.place(x=0,y=530,width=1530,height=60)
+
+        btnAddData=Button(FrameButtom,text="Add Data",command=self.add_data,font=("Open Sans",12),width=23,bg="white",fg="black")
+        btnAddData.grid(row=0,column=0,padx=6,pady=5)
+
+        btnAddData=Button(FrameButtom,text="Show Data",command=self.showdata,font=("Open Sans",12),width=23,bg="white",fg="black")
+        btnAddData.grid(row=0,column=1,padx=6)
+
+        btnAddData=Button(FrameButtom,text="Update",command=self.update,font=("Open Sans",12),width=23,bg="white",fg="black")
+        btnAddData.grid(row=0,column=2,padx=6)
+
+        btnAddData=Button(FrameButtom,text="Delete",command=self.delete,font=("Open Sans",12),width=23,bg="white",fg="black")
+        btnAddData.grid(row=0,column=3,padx=6)
+
+        btnAddData=Button(FrameButtom,text="Reset",command=self.reset,font=("Open Sans",12),width=23,bg="white",fg="black")
+        btnAddData.grid(row=0,column=4,padx=6)
+
+        btnAddData=Button(FrameButtom,text="Exit",command=self.exit,font=("Open Sans",12),width=23,bg="white",fg="black")
+        btnAddData.grid(row=0,column=5,padx=6)
+
+        # ================================ information Frame =========================
+
+        FrameDetails=Frame(self.root,bd=6,relief=RIDGE,padx=20,bg="powder blue")
+        FrameDetails.place(x=0,y=590,width=1530,height=210)
+
+        Table_Frame=Frame(FrameDetails,bd=6,relief=RIDGE,bg="powder blue")
+        Table_Frame.place(x=0,y=2,width=1460,height=190)
+
+        xscroll=ttk.Scrollbar(Table_Frame,orient=HORIZONTAL)
+        yscroll=ttk.Scrollbar(Table_Frame,orient=VERTICAL)
+
+
+        self.books_table=ttk.Treeview(Table_Frame,column=("editor","bookid","bookname","auther","finalprice"),xscrollcommand=xscroll.set,yscrollcommand=yscroll.set)
+
+        xscroll.pack(side=BOTTOM,fill=X)
+        yscroll.pack(side=RIGHT,fill=Y)
+
+        xscroll.config(command=self.books_table.xview)
+        yscroll.config(command=self.books_table.yview)
+
+        self.books_table.heading("editor",text="Editor")
+        self.books_table.heading("bookid",text="Book Id")
+        self.books_table.heading("bookname",text="Book Name")
+        self.books_table.heading("auther",text="Auther")
+        self.books_table.heading("finalprice",text="Final Price")
+
+        self.books_table["show"]="headings"
+        
+        
+
+        self.books_table.column("editor",width=100)
+        self.books_table.column("bookid",width=100)
+        self.books_table.column("bookname",width=100)
+        self.books_table.column("auther",width=100)
+        self.books_table.column("finalprice",width=100)
+        
+        
+        self.books_table.pack(fill=BOTH,expand=1)
+        
+        self.books_table.bind("<ButtonRelease-1>",self.get_cursor)
+        self.fetch_data()
+
+    
+    def add_data(self):
+        if self.editor_var.get()=="" or self.bookid_var.get()=="" or self.bookname_var.get()=="" or self.auther_var.get()=="" or self.finalprice_var.get()=="" :
+            messagebox.showerror("Error","All Fields are required",parent=self.root)
+        else:
+            conn=mysql.connector.connect(host="localhost",username="root",password="Mysql@123",database="database3")
+            my_cursor=conn.cursor()
+            try:
+                my_cursor.execute("insert into books values(%s,%s,%s,%s,%s)",( #self......
+                                                                                self.editor_var.get(),
+                                                                                self.bookid_var.get(),
+                                                                                self.bookname_var.get(),
+                                                                                self.auther_var.get(),
+                                                                                self.finalprice_var.get()))
+                conn.commit()
+                self.fetch_data()
+                conn.close()
+                messagebox.showinfo("Success","Member has been addmited successfully",parent=self.root)
+            except Exception as e:
+                messagebox.showerror("Error",f"Due to {str(e)}",parent=self.root)
+
+
+
+    def update(self):
+
+        if self.editor_var.get()=="" or self.bookid_var.get()=="" or self.bookname_var.get()=="" or self.auther_var.get()=="" or self.finalprice_var.get()=="" :
+            messagebox.showerror("Error","All Fields are required",parent=self.root)
+        else:
+            conn=mysql.connector.connect(host="localhost",username="root",password="Mysql@123",database="database3")
+            my_cursor=conn.cursor()
+            my_cursor.execute("update books set editor=%s,bookname=%s,auther=%s,finalprice=%s where bookid=%s",( #self......
+                                                                                                                        self.editor_var.get(),
+                                                                                                                        self.bookname_var.get(),
+                                                                                                                        
+                                                                                                                        self.auther_var.get(),
+                                                                                                                        self.finalprice_var.get(),
+                                                                                                                        self.bookid_var.get(),
+                                                                                                                        ))
+
+            conn.commit()
+            self.fetch_data()
+            self.reset()
+            conn.close()
+            messagebox.showinfo("Success","Member has been updated successfully",parent=self.root)
+                                                                                                                    
+
+
+
+
+
+    def fetch_data(self):
+        conn=mysql.connector.connect(host="localhost",username="root",password="Mysql@123",database="database3")
+        my_cursor=conn.cursor()
+        my_cursor.execute("SELECT * FROM books")
+        rows=my_cursor.fetchall()
+        
+        if len(rows)!=0:
+            self.books_table.delete(*self.books_table.get_children())
+            for i in rows:
+                self.books_table.insert("",END,values=i)
+            conn.commit()
+        conn.close()
+
+
+    def get_cursor(self,value=""):
+        cursor_row=self.books_table.focus()
+        content=self.books_table.item(cursor_row)
+        row=content["values"]
+        #row=content[content]
+
+        self.editor_var.set(row[0]),
+        self.bookid_var.set(row[1]),
+        self.bookname_var.set(row[2]),
+        self.auther_var.set(row[3]),
+        self.finalprice_var.set(row[4])
+
+        # self.fetch_data()
+    
+    def showdata(self):
+        self.txtBox.insert(END,"Editor\t\t" + self.editor_var.get() + "\n")
+        self.txtBox.insert(END,"Book Id\t\t" + self.bookid_var.get() + "\n")
+        self.txtBox.insert(END,"Book Name\t\t" + self.bookname_var.get() + "\n")
+        self.txtBox.insert(END,"Auther\t\t" + self.auther_var.get() + "\n")
+        self.txtBox.insert(END,"Actual Cost\t\t" + self.finalprice_var.get() + "\n")
+
+        
+    def reset(self):
+        self.editor_var.set("")
+        self.bookid_var.set("")
+        self.bookname_var.set("")
+        self.auther_var.set("")
+        self.finalprice_var.set("")
+        self.txtBox.delete("1.0",END)
+
+        self.fetch_data()
+
+    def exit(self):
+        iExit=messagebox.askyesno("Library Manage System","Do you want to exit")
+        if iExit>0:
+            self.root.destroy()
+            return
+
+
+    def delete(self):
+        
+        
+        if self.bookid_var.get()=="" or self.bookname_var.get()=="":
+            messagebox.showerror("Error","First select the Member")
+
+        else:
+            conn=mysql.connector.connect(host="localhost",username="root",password="Mysql@123",database="database3")
+            my_cursor=conn.cursor()
+            try:
+                
+                query="delete from books where bookid=%s"
+                
+                value=(self.bookid_var.get(),)
+                my_cursor.execute(query,value)
+                
+                conn.commit()
+                self.fetch_data()
+                self.reset()
+                #self.fetch_data()
+                conn.close()
+                messagebox.showinfo("Success","Member has been deleted")
+            except Exception as e:
+                messagebox.showerror("Error","Member has not been deleted")
+            
+            
+
+
+
+
+
+
+
+
+    
+
+
+        
+
+        
+
+
+
+
+
+if __name__ == "__main__":
+    root=Tk()
+    obj=Library_ManagementSystem(root)
+    root.mainloop()
