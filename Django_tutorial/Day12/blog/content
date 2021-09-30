@@ -1,0 +1,82 @@
+
+ # 1st folder named (__init__)
+ # 2nd folder named(admin.py)
+ 
+ from django.contrib import admin
+from blog.models import Post
+# Register your models here.
+
+# admin.site.register(Post)
+@admin.register(Post)
+
+class PostAdmin(admin.ModelAdmin):
+    class Media:
+        js= ('tinyinject.js',)
+        
+ # 3rd folder named(apps.py)
+ 
+ from django.apps import AppConfig
+
+
+class BlogConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'blog'
+
+#4th folder named(models.py)
+from django.db import models
+from django.views.generic.base import View
+
+# Create your models here.
+
+class Post(models.Model):
+    sno=models.AutoField(primary_key=True)
+    title=models.CharField(max_length=255)
+    content=models.TextField()
+    author=models.CharField(max_length=20)
+    slug=models.CharField(max_length=130)
+    views=models.IntegerField(default=0)
+    
+    timeStamp=models.DateTimeField(blank=True)
+
+    def __str__(self):
+        return self.title+" by "+self.author
+#5th folder named(tests.py)
+ 
+   from django.test import TestCase
+
+# Create your tests here.
+  
+  # 6th folder named (urls.py)
+  from django.contrib import admin
+from django.urls import path,include
+from . import views
+
+urlpatterns = [
+    path('',views.bloghome,name="Bloghome"),
+    path('<str:slug>',views.blogpost,name="Blogpost"),
+    
+]
+
+#7th folder named(views.py)
+from blog.models import Post
+from django.http.response import HttpResponse
+from django.shortcuts import render, HttpResponse
+
+# Create your views here.
+def bloghome(request):
+    allPosts=Post.objects.all()
+    print(allPosts)
+    context={'allPosts':allPosts}
+    return render(request,"blog/bloghome.html",context)
+
+def blogpost(request,slug):
+    post=Post.objects.filter(slug=slug).first()
+    post.views=post.views + 1
+    post.save() 
+    context={'post':post}
+    return render(request,"blog/blogpost.html",context)
+
+ 
+ 
+ 
+  
